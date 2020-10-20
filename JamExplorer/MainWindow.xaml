@@ -1,0 +1,102 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JamExplorer"
+        xmlns:shlbr="http://schemas.jam-software.com/shellbrowser/wpf/" 
+        xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" 
+        xmlns:shellControls="clr-namespace:Jam.Shell;assembly=ShellBrowser.Winforms" 
+        x:Class="JamExplorer.MainWindow"
+        mc:Ignorable="d"
+        Title="JamExplorer" Height="480" Width="640" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.Resources>
+            <shlbr:EnumToBooleanConverter x:Key="ViewStateToBoolConverter" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu IsMainMenu="True">
+            <MenuItem Header="ShellTree">
+                <MenuItem Header="RootedAt">
+                    <MenuItem Header="Like Windows Explorer" Click="MultiRoots_Click"/>
+                    <Separator/>
+                    <MenuItem Header="Desktop" Click="RootAtDesktop_Click"/>
+                    <MenuItem Header="This PC" Click="RootAtThisPC_Click"/>
+                    <MenuItem Header="c:\" Click="RootAtC_Click"/>
+                    <MenuItem Header="Custom multiple roots" Click="CustomRoots_Click"/>
+                </MenuItem>
+                <MenuItem Header="Automatic Refresh" IsCheckable="True" IsChecked="{Binding AutomaticRefresh, ElementName=shellTree}"/>
+                <MenuItem Header="Allow DragDrop Operations" IsCheckable="True" IsChecked="{Binding ShellDragDrop, ElementName=shellTree}"/>
+                <MenuItem Header="Show Overlay Icons" IsCheckable="True" IsChecked="{Binding ShowOverlayIcons, ElementName=shellTree}"/>
+                <MenuItem Header="Show Files and Folders" IsCheckable="True" IsChecked="{Binding ShowFiles, ElementName=shellTree}"/>
+                <Separator/>
+                <MenuItem Header="Refresh" Click="MenuItem_Refresh_Click"/>
+            </MenuItem>
+            <MenuItem Header="ShellListView">
+               <MenuItem Header="Show hidden items" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=ShowHidden}"/>
+               <MenuItem Header="Show overlay icons" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=ShowOverlayIcons}"/>
+               <MenuItem Header="Show parent folder icon" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=ShowParentFolder}"/>
+               <MenuItem Header="Filesystem only" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=FileSystemOnly}"/>
+                <MenuItem Header="View">
+                    <MenuItem Header="Details" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=ViewState, Converter={StaticResource ViewStateToBoolConverter}, ConverterParameter=Details}"/>
+                    <MenuItem Header="Icons" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=ViewState, Converter={StaticResource ViewStateToBoolConverter}, ConverterParameter=LargeIcons}"/>
+                    <MenuItem Header="Jumbo icons" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=ViewState, Converter={StaticResource ViewStateToBoolConverter}, ConverterParameter=ExtraLargeIcons}"/>
+                    <MenuItem Header="Thumbnails" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=ViewState, Converter={StaticResource ViewStateToBoolConverter}, ConverterParameter=Thumbnails}"/>
+                    <MenuItem Header="Tiles" IsCheckable="True" IsChecked="{Binding ElementName=shellList, Path=ViewState, Converter={StaticResource ViewStateToBoolConverter}, ConverterParameter=Tile}"/>
+                </MenuItem>
+               <MenuItem Header="Automatic Refresh" IsCheckable="True" IsChecked="{Binding AutomaticRefresh, ElementName=shellList}"/>
+                <Separator/>
+                <MenuItem Header="Refresh" Click="MenuItem_Refresh_ShellList_Click"/>
+                <MenuItem Header="Create new folder" Click="MenuItem_CreateDir_ShellList_Click"/>
+            </MenuItem>
+            <MenuItem Header="Checkboxes">
+                <MenuItem Header="Enabled" IsCheckable="True" IsChecked="{Binding CheckBoxes, ElementName=shellTree}" Checked="Checkboxes_Checked" Unchecked="Checkboxes_Unchecked"/>
+                <MenuItem Header="Show Selected" Click="ShowSelected_Click"/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem Header="Preview" IsCheckable="True" IsChecked="True" Click="TogglePreview_Click"/>
+                <MenuItem Header="Thumbnail" IsCheckable="True" IsChecked="True" Click="ToggleThumbnail_Click"/>
+            </MenuItem>
+        </Menu>
+        <shlbr:ShellAddressBar x:Name="shellAddressBar" Grid.Row="1" SpecialFolder="{x:Static shlbr:ShellFolder.Drives}"/>
+        <Grid x:Name="gridMain" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="5" x:Name="panelPreviewSplitter"/>
+                <ColumnDefinition x:Name="panelPreview"/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="200" x:Name="panelThumbnail"/>
+                </Grid.RowDefinitions>
+                <shlbr:ShellTreeView x:Name="shellTree">
+                    <shlbr:ShellTreeView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Custom item" Click="CustomTreeMenuItem_Click"/>
+                        </ContextMenu>
+                    </shlbr:ShellTreeView.ContextMenu>
+                </shlbr:ShellTreeView>
+                <shlbr:ShellThumbnail x:Name="shellThumbnail" Grid.Row="1" Margin="20"/>
+            </Grid>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
+            <shlbr:ShellListView x:Name="shellList" Grid.Column="2" UseSlowInfoTip="True">
+<!-- The following code replaces the background context menu of the ShellList by a custom one.-->                
+<!--                <shlbr:ShellListView.BackgroundContextMenu>-->
+<!--                    <ContextMenu>-->
+<!--                        <MenuItem Header="Custom item" Click="ShellListBackgroundMenuItem_Click"/>-->
+<!--                    </ContextMenu>-->
+<!--                </shlbr:ShellListView.BackgroundContextMenu>-->
+            </shlbr:ShellListView>
+            <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch"/>
+            <shlbr:ShellFilePreview x:Name="shellFilePreview" Grid.Column="4"/>
+        </Grid>
+    </Grid>
+</Window>
+

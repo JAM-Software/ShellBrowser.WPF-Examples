@@ -1,0 +1,99 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExplorerBrowserSample"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:shlbr="http://schemas.jam-software.com/shellbrowser/wpf/" 
+        x:Class="ExplorerBrowserSample.MainWindow"
+        mc:Ignorable="d"
+        Title="ExplorerBrowser sample" Height="600" Width="1000">
+
+    <DockPanel>
+        <Menu DockPanel.Dock ="Top" IsMainMenu="True">
+            <MenuItem Header="Folder">
+                <MenuItem Header="Windows" Tag="{x:Static shlbr:ShellFolder.Windows}" Click="ChooseFolderMenuItem_Click"/>
+                <MenuItem Header="This PC" Tag="{x:Static shlbr:ShellFolder.Drives}" Click="ChooseFolderMenuItem_Click"/>
+                <MenuItem Header="Desktop" Tag="{x:Static shlbr:ShellFolder.Desktop}" Click="ChooseFolderMenuItem_Click"/>
+                <MenuItem Header="AllTasks" Tag="{x:Static shlbr:ShellFolder.AllTasks}" Click="ChooseFolderMenuItem_Click"/>
+                <MenuItem Header="Choose..." Click="ChooseFolderMenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="Panes" ItemsSource="{Binding VisiblePanes}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="IsCheckable" Value="True"/>
+                        <Setter Property="Header" Value="{Binding Item}" />
+                        <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=TwoWay}" />
+                        <Setter Property="Command" Value="{Binding Command}"/>
+                        <Setter Property="CommandParameter" Value="{Binding}"/>
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+
+            <MenuItem Header="View" ItemsSource="{Binding ViewMode}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="IsCheckable" Value="True"/>
+                        <Setter Property="Header" Value="{Binding Item}" />
+                        <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=TwoWay}" />
+                        <Setter Property="Command" Value="{Binding Command}"/>
+                        <Setter Property="CommandParameter" Value="{Binding}"/>
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+
+            <MenuItem Header="Columns" ItemsSource="{Binding Columns}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="IsCheckable" Value="True"/>
+                        <Setter Property="Header" Value="{Binding Path=Item.Caption}" />
+                        <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=TwoWay}" />
+                        <Setter Property="Command" Value="{Binding Command}"/>
+                        <Setter Property="CommandParameter" Value="{Binding}"/>
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+            <MenuItem Header="Column header" ItemsSource="{Binding ShowColumnHeader}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="IsCheckable" Value="True"/>
+                        <Setter Property="Header" Value="{Binding Item}" />
+                        <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=TwoWay}" />
+                        <Setter Property="Command" Value="{Binding Command}"/>
+                        <Setter Property="CommandParameter" Value="{Binding}"/>
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+            <MenuItem Header="Filter">
+                <MenuItem Name="FilterFiles" Header="Files" Click="FilterFiles_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="FilterFolders" Header="Folders" Click="FilterFolders_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="FilterHidden" Header="Hidden" Click="FilterHidden_Click" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Name="FilterFileSystem" Header="Filesystem only" Click="FilterFileSystem_Click" IsCheckable="True"/>
+                <MenuItem Name="FilterTextFiles" Header="Textfiles only" Click="FilterTextFiles_Click" IsCheckable="True"/>
+            </MenuItem>
+            <MenuItem Header="Check mode" ItemsSource="{Binding CheckMode}">
+                <MenuItem.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="IsCheckable" Value="True"/>
+                        <Setter Property="Header" Value="{Binding Item}" />
+                        <Setter Property="IsChecked" Value="{Binding IsChecked, Mode=TwoWay}" />
+                        <Setter Property="Command" Value="{Binding Command}"/>
+                        <Setter Property="CommandParameter" Value="{Binding}"/>
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+            </MenuItem>
+            <MenuItem Header="Selection">
+                <MenuItem Name="SelectItem" Header="Select first item" Click="SelectItem_Click"/>
+                <MenuItem Name="DeselectAll" Header="Deselect all" Click="DeselectAll_Click"/>
+                <MenuItem Name="SelectedItems" Header="Get selected items" Click="SelectedItems_Click"/>
+                <MenuItem Name="SingleSelection" Header="Single selection" Click="SingleSelection_Click" IsCheckable="True"/>
+            </MenuItem>
+            <MenuItem Header="Items">
+                <MenuItem Name="GetItems" Header="Get items" Click="Items_Click"/>
+            </MenuItem>
+        </Menu>
+        <shlbr:ShellAddressBar  x:Name="shellAddressBar" DockPanel.Dock ="Top" SelectedItemIdList="{Binding FolderIdList, Mode=TwoWay}"/>
+        <shlbr:ExplorerBrowser x:Name="explorerBrowser1" Location="{Binding FolderIdList, Mode=TwoWay}" NavigationComplete="explorerBrowser1_NavigationComplete" ViewChanged="explorerBrowser1_ViewChanged" View="Icon"/>
+    </DockPanel>
+</Window>

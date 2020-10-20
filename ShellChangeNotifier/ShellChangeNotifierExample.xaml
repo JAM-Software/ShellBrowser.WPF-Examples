@@ -1,0 +1,61 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ShellChangeNotifierExample"
+        xmlns:shlbr="http://schemas.jam-software.com/shellbrowser/wpf/" 
+        x:Class="ShellChangeNotifierExample.MainWindow"
+        mc:Ignorable="d"
+        Title="ShellChangeNotifierExample" Height="350" Width="640">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+        <Grid Height="40" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Content="Enabled" VerticalAlignment="Center" IsChecked="{Binding ChangeNotifier.Enabled}" ToolTip="Enable/disable the ShellChangeNotifier"/>
+            <CheckBox Grid.Column="1" Margin="5,0" VerticalAlignment="Center" Content="Recursive" IsChecked="{Binding ChangeNotifier.Recursive}" ToolTip="Determines if the observed folder should be watched recursively."/>
+
+            <Grid Grid.Column="2" Width="300" Margin="5,0" VerticalAlignment="Center">
+                <ComboBox Name="comboBox_Events" VerticalAlignment="Center" Text="{Binding CaptionEvents, Mode=OneWay}" ItemsSource="{Binding EventSelection}" IsEditable="True" IsReadOnly="True" ToolTip="Check the notification events you want to listen to">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Item}" IsChecked="{Binding IsChecked}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ComboBox>
+            </Grid>
+
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="5,0">Watch:</TextBlock>
+            <shlbr:ShellComboBox Grid.Column="4" Margin="5,0" VerticalAlignment="Center" Location="{Binding WatchedDirectory, Mode=TwoWay}" ToolTip="The folder to track."/>
+        </Grid>
+        
+        <ScrollViewer Name="logScroller" Grid.Row="1">
+            <TextBox Name="textBoxNotifications" Text="{Binding NotificationText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="textBoxNotifications_TextChanged"/>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1" Margin="10,5" Padding="10,3" DockPanel.Dock="Right"  Content="Clear" Click="Button_Click"/>
+        </Grid>
+    </Grid>
+    
+</Window>
+

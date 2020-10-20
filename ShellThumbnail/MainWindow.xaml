@@ -1,0 +1,46 @@
+﻿<Window x:Class="ShellThumbnail.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ShellThumbnail"
+        xmlns:shlbr="http://schemas.jam-software.com/shellbrowser/wpf/"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="ShellThumbnail Example" Height="200" Width="450">
+    <Window.Resources>
+        <local:BoolToContentTypeConverter x:Key="ContentTypeConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <shlbr:ShellAutoCompleteTextBox Height="Auto" Name="TextBoxPath" Grid.Row="0" VerticalAlignment="Center" Location="c:\"/>
+        <shlbr:ShellThumbnail Name="shellThumb" Grid.Row="1" UseContentType="Auto" Location="{Binding ElementName=TextBoxPath, Path=Location}" ToolTip="Right click to display the shell context menu for the selected element.">
+            <shlbr:ShellThumbnail.ContextMenu>
+                <shlbr:ShellContextMenu ShellItem="{Binding PlacementTarget.Path, RelativeSource={RelativeSource Self}}"/>
+            </shlbr:ShellThumbnail.ContextMenu>
+        </shlbr:ShellThumbnail>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" >
+<!--            <CheckBox VerticalAlignment="Center" Content="AutomaticRefresh" Margin="10,0,0,0" IsChecked="{Binding ElementName=shellThumb, Path=AutomaticRefresh, Mode=TwoWay}" ToolTip="Automatically reload the thumbnail when the image has changed."/>-->
+            <CheckBox VerticalAlignment="Center" Content="Show/hide overlay images" Margin="10,0,0,0" IsChecked="{Binding ElementName=shellThumb, Path=Overlays, Mode=TwoWay}" ToolTip="Display overlay icons too."/>
+            <CheckBox VerticalAlignment="Center" Content="Prefer system icons" Margin="10,0,0,0" IsChecked="{Binding ElementName=shellThumb, Path=UseContentType, Converter={StaticResource ContentTypeConverter}}" ToolTip="Prefer the file icon to the thumbnail."/>
+            <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" >Image size:</TextBlock>
+            <ComboBox VerticalAlignment="Center"  Margin="5,10,10,10" SelectionChanged="ComboBox_SelectionChanged" SelectedIndex="0" ToolTip="Choose a fixed system imagelist size.">
+                <ComboBoxItem>Auto</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Static shlbr:SystemImageListSize.SmallIcons}">small(16)</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Static shlbr:SystemImageListSize.LargeIcons}">large(32)</ComboBoxItem>
+                <ComboBoxItem Tag="{x:Static shlbr:SystemImageListSize.ExtraLargeIcons}">extralarge(48)</ComboBoxItem>
+                <ComboBoxItem Content="96">
+                    <ComboBoxItem.Tag>
+                        <system:Int32>96</system:Int32>
+                    </ComboBoxItem.Tag>
+                </ComboBoxItem>
+                <ComboBoxItem Tag="{x:Static shlbr:SystemImageListSize.JumboIcons}">jumbo(256)</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
+    </Grid>
+</Window>
