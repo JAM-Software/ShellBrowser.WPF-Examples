@@ -175,7 +175,6 @@ namespace ExplorerBrowserSample
         public TestAppViewModel(Jam.Shell.WPF.Controls.ExplorerBrowser pExplorerBrowser)
         {
             m_ExplorerBrowser = pExplorerBrowser;
-            m_ExplorerBrowser.Loaded += ExplorerBrowser_Loaded;
             m_ChangeViewModeCommand = new RelayCommand((clickedViewMode) =>
             {
                 CheckedItem<FolderViewMode> item = clickedViewMode as CheckedItem<FolderViewMode>;
@@ -241,12 +240,6 @@ namespace ExplorerBrowserSample
                     RaisePropertyChanged("CheckMode");
                 }
             });
-        }
-
-        private void ExplorerBrowser_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Columns need to be loaded delayed as the IShellView must be ready
-            RaisePropertyChanged("Columns");
         }
 
         public IEnumerable<ExplorerPane> AllPanes
@@ -365,7 +358,7 @@ namespace ExplorerBrowserSample
                 if (m_Columns == null)
                 {
 
-                    if (m_ExplorerBrowser.IsLoaded)
+                    if (m_ExplorerBrowser.IsAvailable)
                     {
                         m_Columns = m_ExplorerBrowser.AllColumns.Select((column, index) => new CheckedItem<ShellViewColumn>(column, m_ChangeColumnsCommand, (m_ExplorerBrowser.Columns.Contains(column))));
                         RaisePropertyChanged("Columns");

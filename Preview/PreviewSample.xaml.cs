@@ -160,19 +160,19 @@ namespace Preview
             public event EventHandler CanExecuteChanged;
 #pragma warning restore 67
 
-            public bool CanExecute(object parameter)
-            {
-                return (parameter is ItemIdList && ((ItemIdList)parameter).IsFolder);
-            }
+            public bool CanExecute(object parameter) => true; 
 
             public void Execute(object parameter)
             {
-                ItemIdList lFolder = parameter as ItemIdList;
-                if (ItemIdList.IsNullOrInvalid(lFolder))
+                ItemIdList lElement = parameter as ItemIdList;
+                if (ItemIdList.IsNullOrInvalid(lElement))
                     return;
 
+
+                string lPath = lElement.IsFolder ? lElement.Path : lElement.ParentPath;
+
                 System.Diagnostics.ProcessStartInfo lProcess = new System.Diagnostics.ProcessStartInfo("cmd.exe");
-                lProcess.Arguments = String.Format(" /k cd /d {0}", lFolder.Path);
+                lProcess.Arguments = String.Format(" /k cd /d {0}", lPath);
                 System.Diagnostics.Process.Start(lProcess);
             }
         }
@@ -208,7 +208,8 @@ namespace Preview
                     m_Folder = value;
                     try
                     {
-                        m_Items = new JamItemIdListCollection(m_Folder);
+                        m_Items = JamItemIdListCollection.GetChildren(m_Folder);
+                        m_Items.Sort();
                     }
                     catch (UnauthorizedAccessException)
                     {

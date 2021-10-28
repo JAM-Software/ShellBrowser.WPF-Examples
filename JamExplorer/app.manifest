@@ -53,7 +53,6 @@
            True/PM      On Windows 8.1, sets the application to per monitor-DPI aware. On Windows Vista through Windows 8, sets the application to system-DPI aware. -->
 			<dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2, System</dpiAwareness>
 			<dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">True/PM</dpiAware>
-			<longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
 		</asmv3:windowsSettings>
 	</asmv3:application>
 

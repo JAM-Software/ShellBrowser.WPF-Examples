@@ -30,20 +30,14 @@
                     </DataTemplate>
                 </ListView.Resources>
                 <ListView.ContextMenu>
-                    <shlbr:ShellContextMenu ShowShellContextMenuOnTop="True" ShellItems="{Binding SelectedItems}">
-                        <MenuItem Header="Open cmd here" 
-                                  Command="{Binding OpenCmdPrompt}" 
-                                  CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                    <shlbr:ShellContextMenu SystemStyle="True" ShowShellContextMenuOnTop="True" ShellItems="{Binding SelectedItems}">
+                        <MenuItem Header="Open cmd here"
+                                  Command="{Binding OpenCmdPrompt}"
+                                  CommandParameter="{Binding SelectedFile}"
                         />
-<!--                        Or using the ViewModel:-->
-<!--                        <MenuItem Header="Open cmd here" -->
-<!--                                  Command="{Binding OpenCmdPrompt}" -->
-<!--                                  CommandParameter="{Binding SelectedFile}"-->
-<!--                        />-->
                         <MenuItem Header="Sum file sizes" Click="MenuItem_Click"/>
                     </shlbr:ShellContextMenu>
                 </ListView.ContextMenu>
-
             </ListView>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
             <shlbr:ShellFilePreview Grid.Column="2" Margin="10" Location="{Binding SelectedFile, Mode=TwoWay}" x:Name="filePreview" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" LoadPreview="FilePreview_LoadPreview"/>
